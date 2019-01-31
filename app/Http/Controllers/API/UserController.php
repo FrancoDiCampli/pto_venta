@@ -13,6 +13,9 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    
+
     public function index()
     {
         return User::latest()->paginate(5);
@@ -65,7 +68,17 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+
+         $user = User::findOrFail($id); 
+         $validatedData = $request->validate([
+            'name' => 'required|max:190',
+            'email' =>'required|string|max:190|unique:users,email,'.$user->id,
+            'password' =>'sometimes|min:6'
+        ]);
+
+        $user->update($request->all());
+         return ['message'=>'editado'];
+
     }
 
     /**
@@ -76,6 +89,10 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $user = User::findOrFail($id);
+
+        $user->delete();
+
+        return ['msg','Usuario borrado'];
     }
 }
