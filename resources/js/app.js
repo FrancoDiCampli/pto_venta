@@ -5,6 +5,8 @@ window.Vue = require('vue');
 import moment from 'moment';
 import { Form, HasError, AlertError } from 'vform';
 
+window.Fire = new Vue();
+
 import swal from 'sweetalert2'
 window.swal = swal;
 
@@ -24,12 +26,18 @@ Vue.component(
 Vue.component(
     'passport-personal-access-tokens', require('./components/passport/PersonalAccessTokens.vue'));
 
-
+import VueTheMask from 'vue-the-mask'
+Vue.use(VueTheMask)
+    
 let routes = [
   { path: '/dashboard', component: require('./components/Dashboard.vue') },
   { path: '/developer', component: require('./components/Dev.vue') },
   { path: '/users', component: require('./components/Users.vue') },
-  { path: '/profile', component: require('./components/Profile.vue') }
+  { path: '/profile', component: require('./components/Profile.vue') },
+  { path: '/clientes', component: require('./components/Clientes.vue') },
+  { path: '/categorias', component: require('./components/Categorias.vue') },
+  { path: '/articulos', component: require('./components/Articulos.vue') },
+  { path: '/inventarios', component: require('./components/Inventarios.vue') }
 ]
 
 const router = new VueRouter({
@@ -53,8 +61,21 @@ const toast = swal.mixin({
 });
 window.toast = toast;
 
+Vue.component('pagination', require('laravel-vue-pagination'));
 
 const app = new Vue({
     el: '#app',
-    router
+    router,
+    data:{
+      search:'',
+
+    },
+    methods:{
+      searchit(){
+        Fire.$emit('searching');
+      }
+      
+
+    }
+    
 });

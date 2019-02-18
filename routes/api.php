@@ -20,3 +20,24 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::apiResources([
     'user' => 'API\UserController'
 ]);
+
+Route::apiResources([
+    'clientes' => 'API\ClientesController'
+]);
+
+Route::apiResources([
+    'categorias' => 'API\CategoriasController'
+]);
+
+Route::apiResources([
+    'articulos' => 'API\ArticulosController'
+]);
+
+Route::apiResources([
+    'inventarios' => 'API\InventariosController'
+]);
+
+Route::get('findCliente','API\ClientesController@searchUser');
+Route::get('findCategoria','API\CategoriasController@searchCategory');
+Route::get('findArticulo','API\ArticulosController@searchArticle');
+
