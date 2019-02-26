@@ -10,6 +10,9 @@ class Inventario extends Model
         'articulo_id',
         'cantidad',
         'lote',
+        'stockminimo',
+        'preciocosto',
+        'precioventa',
         'vencimiento',
         'proveedor_id'
         ];

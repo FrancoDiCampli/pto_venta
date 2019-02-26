@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
+
+use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -17,10 +19,28 @@ class InventariosController extends Controller
      */
     public function index()
     {
+       
+         $articulos = Articulo::orderBy('created_at','asc')->paginate(5);
+         return response()->json([
+             'articulos'=>$articulos
+         ]);
+        // return view('inventarios.index',compact('articulos'));
 
-        $articulos = Articulo::orderBy('created_at','asc')->paginate(5);
-        return view('inventarios.index',compact('articulos'));
+    }
+    public function traerInventario($id){
 
+        $proveedores = Proveedor::all();
+        $inventario = Inventario::where('articulo_id',$id)->paginate(5);
+        $articulo = Articulo::where('id',$id)->get();
+
+        return response()->json([
+            'proveedores' => $proveedores,
+            'inventario' => $inventario,
+            'articulo' =>$articulo
+        ]);
+       
+       
+        return response()->json(['inventario'=>$inventario]);
     }
 
     /**
@@ -40,15 +60,17 @@ class InventariosController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store()
+    public function store(Request $request)
     {
         
-        $att = request()->validate([
+        $att = $request->validate([
             'articulo_id'=>'required',
     		'proveedor_id'=>'required',
-    		'cantidad'=>'required|min:1|max:3',
-           
-            'lote'=> 'min:1',
+            'cantidad'=>'required|min:1|max:3',
+            'stockminimo'=>'min:1|max:3',
+            'preciocosto'=>'required',
+            'precioventa'=>'required',
+            'lote'=> 'min:1|unique:inventarios',
             'vencimiento'=>'date|date_format:Y-m-d',
         ]);
 
@@ -66,7 +88,7 @@ class InventariosController extends Controller
 
         $mov->save();
 
-        return redirect()->back();
+       
 
         
     }

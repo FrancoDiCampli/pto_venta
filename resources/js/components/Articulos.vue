@@ -41,9 +41,9 @@
                             <i class="fas fa-trash-alt red"></i>
                         </a>
 
-                        <a  @click="inventario(articulo.id)">
-                            <i class="fas fa-trash-alt red"></i>
-                        </a>
+                        <router-link :to="{ path: '/inventarios/'+ articulo.id}"  class="nav-link">
+                         <i class="fas fa-warehouse"></i>
+                        </router-link>
                         
                     </td>
                   </tr>
@@ -179,6 +179,7 @@
                 categorias:{},
                 image:'',
                 busqueda:{},
+                id:10,
 
                 form: new Form({
                     id:'',

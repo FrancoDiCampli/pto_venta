@@ -5,6 +5,8 @@ window.Vue = require('vue');
 import moment from 'moment';
 import { Form, HasError, AlertError } from 'vform';
 
+import datepicker from 'vuejs-datepicker';
+
 window.Fire = new Vue();
 
 import swal from 'sweetalert2'
@@ -37,7 +39,7 @@ let routes = [
   { path: '/clientes', component: require('./components/Clientes.vue') },
   { path: '/categorias', component: require('./components/Categorias.vue') },
   { path: '/articulos', component: require('./components/Articulos.vue') },
-  { path: '/inventarios', component: require('./components/Inventarios.vue') }
+  { path: '/inventarios/:id', name:'articulo', component: require('./components/Inventarios.vue') }
 ]
 
 const router = new VueRouter({
@@ -66,6 +68,7 @@ Vue.component('pagination', require('laravel-vue-pagination'));
 const app = new Vue({
     el: '#app',
     router,
+    datepicker,
     data:{
       search:'',
 
