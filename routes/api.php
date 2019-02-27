@@ -39,6 +39,9 @@ Route::apiResources([
 
 Route::get('inventario/{id}','API\InventariosController@traerInventario')->name('inventario.traer');
 
+Route::post('/moverinventario/{id}','API\InventariosController@moverInventario')->name('inventario.mover');
+
+
 Route::get('findCliente','API\ClientesController@searchUser');
 Route::get('findCategoria','API\CategoriasController@searchCategory');
 Route::get('findArticulo','API\ArticulosController@searchArticle');

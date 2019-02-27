@@ -70,7 +70,7 @@ class InventariosController extends Controller
             'stockminimo'=>'min:1|max:3',
             'preciocosto'=>'required',
             'precioventa'=>'required',
-            'lote'=> 'min:1|unique:inventarios',
+            'lote'=> 'min:1',
             'vencimiento'=>'date|date_format:Y-m-d',
         ]);
 
@@ -102,10 +102,20 @@ class InventariosController extends Controller
     public function show($id)
     {
 
-        $articulo = Articulo::find($id);
-        $proveedores = Proveedor::all();
-        $suma = $articulo->inventarios->sum('cantidad');
-        return view('inventarios.show',compact('articulo','proveedores','suma'));
+        // $articulo = Articulo::find($id);
+        // $proveedores = Proveedor::all();
+        // $suma = $articulo->inventarios->sum('cantidad');
+        // return view('inventarios.show',compact('articulo','proveedores','suma'));
+
+            $inventario = Inventario::where('id',$id)->get();
+            $proveedores = Proveedor::all();
+
+            return response()->json([
+                'proveedores' => $proveedores,
+                'inventario' => $inventario
+            ]);
+
+
 
     }
 
@@ -132,37 +142,69 @@ class InventariosController extends Controller
     public function update(Request $request, $id)
     {
         $inventario = Inventario::find($id);
-        $opt = $request->movimiento;
-        switch ($opt) {
-            case '1':
-                $inventario->cantidad = $request->cantidad + $request->descuento;
-                break;
-            case '2':
-                $inventario->cantidad = $request->cantidad - $request->descuento;
-                break;
-            case '3':
-                $inventario->cantidad = $request->cantidad + $request->descuento;
-                break;
-            case '4':
-                $inventario->cantidad = $request->cantidad - $request->descuento;
-                break;
-            default:
-                # code...
-                break;
-        }  
 
-     
-        $inventario->update();
+        $att = $request->validate([
+            'articulo_id'=>'required',
+    		'proveedor_id'=>'required',
+            'cantidad'=>'required|min:1|max:3',
+            'stockminimo'=>'min:1|max:3',
+            'preciocosto'=>'required',
+            'precioventa'=>'required',
+            'lote'=> 'min:1',
+            'vencimiento'=>'date|date_format:Y-m-d',
+        ]);
 
-        $mov = new Movimiento;
-        $mov->inventario_id = $id;
-        $mov->tipo = $opt;
-        $mov->cantidad = $request->descuento;
-        $mov->fecha = now();
+        $inventario->update($att);
+
+        $ultimo = $inventario->id;
+
+        $mov = Movimiento::where('inventario_id',$id)->where('tipo',1)->latest()->first();
+        
+        $mov->cantidad = $request->cantidad;
+        $mov->touch();
 
         $mov->save();
 
-        return redirect('/inventarios');
+       
+    }
+
+    public function moverInventario(Request $request, $id){
+
+       
+        $cantidad =0;
+        $inventario = Inventario::find($request->id);
+       
+        if($request->movimiento === 2){
+            $inventario->cantidad = $inventario->cantidad - $request->unidades;
+            $cantidad = $request->unidades;
+           
+        }
+        if($request->movimiento === 3){
+            $inventario->cantidad = $inventario->cantidad + $request->unidades;
+            $cantidad = $request->unidades;
+           
+        }
+        if($request->movimiento === 4){
+
+            $inventario->cantidad = 0;
+            $cantidad = $request->stock;
+           
+        }
+
+        $inventario->update();
+
+        
+        $mov = new Movimiento;
+        $mov->inventario_id = $id;
+        $mov->tipo = $request->movimiento;
+
+        $mov->cantidad = $cantidad;
+        $mov->fecha = now();
+        $mov->touch();
+
+        $mov->save();
+
+
     }
 
     /**
