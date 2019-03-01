@@ -5,6 +5,8 @@ namespace App\Http\Controllers\API;
 use App\Marca;
 use App\Articulo;
 use App\Categoria;
+
+use App\Inventario;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
@@ -113,6 +115,38 @@ class ArticulosController extends Controller
             $articulo = Articulo::latest()->paginate(5);
         }
         return $articulo;
+    }
+
+    public function buscarCodigo($cod){
+        $articulos = Articulo::where('codArticulo','LIKE',$cod.'%')->get();
+        
+        
+        // $articulo = Articulo::firstOrFail()->where('codArticulo', $value);
+      
+        return response()->json($articulos);
+
+    }
+    public function buscarArticulo($cod){
+        $articulos = Articulo::where('articulo','LIKE',$cod.'%')->get();
+        
+        // $articulo = Articulo::firstOrFail()->where('codArticulo', $value);
+      
+        return response()->json($articulos);
+
+    }
+    
+    public function traerInventario($id){
+
+        
+        $inventarios = Inventario::where('articulo_id',$id)->get();
+        
+        $stock = $inventarios->sum('cantidad'); 
+
+        
+        return response()->json([
+            'stock' => $stock,
+            'inventarios' =>$inventarios
+        ]);
     }
 
 }

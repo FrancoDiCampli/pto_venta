@@ -3,6 +3,8 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 import moment from 'moment';
+Vue.prototype.moment = moment;
+
 import { Form, HasError, AlertError } from 'vform';
 
 import datepicker from 'vuejs-datepicker';
@@ -39,7 +41,8 @@ let routes = [
   { path: '/clientes', component: require('./components/Clientes.vue') },
   { path: '/categorias', component: require('./components/Categorias.vue') },
   { path: '/articulos', component: require('./components/Articulos.vue') },
-  { path: '/inventarios/:id', name:'articulo', component: require('./components/Inventarios.vue') }
+  { path: '/inventarios/:id', name:'articulo', component: require('./components/Inventarios.vue') },
+  { path: '/factura',component: require('./components/Factura.vue') }
 ]
 
 const router = new VueRouter({

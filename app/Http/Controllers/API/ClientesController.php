@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\API;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Cliente;
 use Image;
+use App\Cliente;
+use Illuminate\Http\Request;
 use App\Http\Requests\StoreCliente;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateCliente;
+use Illuminate\Support\Facades\Auth;
+
 class ClientesController extends Controller
 {
   
@@ -147,5 +149,15 @@ class ClientesController extends Controller
             $users = Cliente::latest()->paginate(5);
         }
         return $users;
+    }
+
+
+    public function buscar(Request $request){
+        $clientes = Cliente::where('nombre','LIKE','%'.$request->buscar.'%')->get();
+        $user = 1;
+        return response()->json([
+            'user'=>$user,
+            'clientes' =>$clientes
+            ]);
     }
 }

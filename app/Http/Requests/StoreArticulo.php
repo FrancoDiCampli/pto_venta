@@ -29,6 +29,7 @@ class StoreArticulo extends FormRequest
             'descripcion'=>'required|min:1|max:190',
             'marca_id'=>'required|min:1',
             'categoria_id'=>'required|min:1',
+           
                        
         ];
     }
