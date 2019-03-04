@@ -116,7 +116,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <i class="fas fa-barcode"></i>
                     <p>Inventario</p>
                   </router-link>
-              </li>
+                </li>
 
                 <li class="nav-item">
                   <router-link to="/categorias" class="nav-link">
@@ -166,11 +166,19 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </li>
             </ul>
           </li>
-          
+          <li class="nav-item">
+            <router-link to="/factura" class="nav-link">
+             <i class="nav-icon fas fa-tachometer-alt"></i>
+               <p>
+               Factura
+              
+             </p>
+           </router-link>
+         </li>
 
             <li class="nav-item">
                <router-link to="/profile" class="nav-link">
-                <i class="nav-icon fas fa-tachometer-alt"></i>
+                <i class="fas fa-file-invoice"></i>
                   <p>
                   Profile
                  

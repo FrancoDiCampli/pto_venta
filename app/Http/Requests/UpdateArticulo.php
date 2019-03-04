@@ -30,6 +30,7 @@ class UpdateArticulo extends FormRequest
             'stockminimo'=>'min:1',
             'marca_id'=>'required|min:1',
             'categoria_id'=>'required|min:1',
+            
                        
         ];
     }
