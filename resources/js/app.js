@@ -39,7 +39,9 @@ let routes = [
   { path: '/clientes', component: require('./components/Clientes.vue') },
   { path: '/categorias', component: require('./components/Categorias.vue') },
   { path: '/articulos', component: require('./components/Articulos.vue') },
-  { path: '/inventarios/:id', name:'articulo', component: require('./components/Inventarios.vue') }
+  { path: '/inventarios/:id', name:'articulo', component: require('./components/Inventarios.vue') },
+  { path: '/suppliers', component: require('./components/Suppliers.vue') },
+  { path: '/marcas', component: require('./components/Marcas.vue') },
 ]
 
 const router = new VueRouter({
