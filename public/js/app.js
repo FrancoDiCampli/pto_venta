@@ -81764,57 +81764,127 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      fecha: '',
+      ptoventa: 1,
+      fecha: "",
       facturas: true,
-      numfactura: 100,
-      cliente: '',
-      buscarCliente: '',
+      numfactura: 1,
+      cliente: "",
+      buscarCliente: "",
       clientes: {},
-      userid: '',
-      cod: '',
-      articulo: '',
+      userid: "",
+      cod: "",
+      articulo: "",
       articulos: {},
-      id: '',
+      id: "",
       todos: {},
-      disponible: '',
-      max: '',
-      precio: '',
+      disponible: "",
+      max: "",
+      precio: "",
       botonDeshabilitado: true,
       total: 0,
       invoice_tax: 21,
       guardadoDeshabilitado: false,
-      cuit: '',
+      cuit: "",
       form: new Form({
-        id: '',
-        nombre: '',
-        doc: '',
-        direccion: '',
-        cp: '',
+        id: "",
+        nombre: "",
+        doc: "",
+        direccion: "",
+        cp: "",
         percibeiva: 0,
         percibeiibb: 0,
-        condicionpago: '',
+        condicionpago: "",
         enviarcomprobante: 0,
-        mail: '',
-        telefono: '',
+        mail: "",
+        telefono: "",
         estado: 0,
-        foto: ''
+        foto: ""
       }),
       detalles: [{
-        id: '',
-        codArticulo: '',
-        articulo: '',
-        precioUnitario: '',
-        unidades: '',
+        id: "",
+        codArticulo: "",
+        articulo: "",
+        precioUnitario: "",
+        unidades: "",
         sTotal: 0
-      }]
+      }],
+      factura: new Form({})
     };
   },
   methods: {
-    enviarDatos: function enviarDatos() {},
+    limpiar: function limpiar() {
+      this.clientes = {};
+      this.todos = {};
+      this.articulos = {};
+      this.form.reset();
+      this.detalles.reset();
+    },
+    enviarDatos: function enviarDatos() {
+      axios({
+        method: "post",
+        url: "/api/facturas",
+        data: {
+          detalle: this.detalles,
+          cliente: this.form,
+          ptoventa: this.ptoventa,
+          numFactura: this.numfactura,
+          cuit: this.form.doc,
+          fecha: this.fecha,
+          total: this.total,
+          recargo: this.invoice_tax,
+          cliente_id: this.form.id,
+          user_id: 1
+        }
+      }).then(function (response) {
+        this.limpiar();
+      }).catch(function (error) {
+        console.log(error);
+      }).then(function () {});
+    },
     agregarFila: function agregarFila() {
       this.detalles.push({
         id: this.id,
@@ -81842,7 +81912,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       var me = this;
       var cod = invoice_product.id;
       var tope = 0;
-      axios.get('/api/codArticulo/' + this.cod).then(function (response) {
+      axios.get("/api/codArticulo/" + this.cod).then(function (response) {
         var r = response.data;
         tope = r.cantidad;
         me.max = tope;
@@ -81871,7 +81941,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       if (!isNaN(total)) {
         this.total = total.toFixed(2);
       } else {
-        this.total = '0.00';
+        this.total = "0.00";
       }
     },
     cargarArticulo: function cargarArticulo(res) {
@@ -81887,7 +81957,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     traerInventario: function traerInventario(val) {
       var _this = this;
 
-      axios.get('/api/traerInventario/' + val).then(function (response) {
+      axios.get("/api/traerInventario/" + val).then(function (response) {
         _this.disponible = response.data.stock;
         _this.max = response.data.stock;
         _this.precio = response.data.inventarios[0].precioventa;
@@ -81899,37 +81969,37 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       me.clientes = {};
 
       if (me.buscarCliente.length > 0) {
-        axios.get('/api/buscarCliente/' + me.buscarCliente).then(function (response) {
+        axios.get("/api/buscarCliente/" + me.buscarCliente).then(function (response) {
           me.userid = response.data.user;
           me.clientes = response.data.clientes;
         });
       } else {
         me.clientes = {};
-        me.buscarCliente = '';
+        me.buscarCliente = "";
       }
     },
     seleccionaCliente: function seleccionaCliente(cliente) {
       this.cui = cliente.doc;
       this.form.fill(cliente);
-      this.buscarCliente = '';
-      this.clientes = '';
+      this.buscarCliente = "";
+      this.clientes = "";
     },
     traerFactura: function traerFactura() {
       var me = this;
-      axios.get('/api/facturas/').then(function (response) {
+      axios.get("/api/facturas/").then(function (response) {
+        var i = response.data.factura.length;
         me.numfactura = response.data;
-        me.numfactura = me.numfactura.factura[0].numfactura + 1;
+        me.numfactura = me.numfactura.factura[i - 1].numfactura + 1;
       });
     },
     fechar: function fechar() {
       this.fecha = __WEBPACK_IMPORTED_MODULE_0_moment___default()().format("DD-MM-YYYY");
-      console.log(this.fecha);
     },
     traerCodigo: function traerCodigo() {
       var me = this;
 
       if (me.cod.length > 0) {
-        axios.get('/api/codArticulo/' + this.cod).then(function (response) {
+        axios.get("/api/codArticulo/" + this.cod).then(function (response) {
           me.articulos = response.data;
         });
       } else {
@@ -81940,7 +82010,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       var me = this;
 
       if (me.articulo.length > 0) {
-        axios.get('/api/nomArticulo/' + this.articulo).then(function (response) {
+        axios.get("/api/nomArticulo/" + this.articulo).then(function (response) {
           me.todos = response.data;
         });
       } else {
@@ -81948,10 +82018,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       }
     },
     limpiarArticulo: function limpiarArticulo() {
-      this.articulo = '';
+      this.articulo = "";
     },
     limpiarCodigo: function limpiarCodigo() {
-      this.cod = '';
+      this.cod = "";
+    },
+    eliminarPorNulo: function eliminarPorNulo() {
+      this.detalles.splice(0);
     }
   },
   watch: {
@@ -82001,7 +82074,7 @@ var render = function() {
       _c("div", { staticClass: "col-md-12" }, [
         _c("div", { staticClass: "card" }, [
           _c("div", { staticClass: "card-header card-header-primary" }, [
-            _c("h4", { staticClass: "card-title " }, [_vm._v("Nueva Facura")]),
+            _c("h4", { staticClass: "card-title" }, [_vm._v("Nueva Facura")]),
             _vm._v(" "),
             _c("div", { staticClass: "invoice p-3 mb-3" }, [
               _c("div", { staticClass: "row" }, [
@@ -82063,27 +82136,31 @@ var render = function() {
                       domProps: { textContent: _vm._s(_vm.form.nombre) }
                     }),
                     _vm._v(" "),
-                    _c("strong", [_vm._v("Direccion:  ")]),
+                    _c("strong", [_vm._v("Direccion:")]),
+                    _vm._v(" "),
                     _c("div", {
                       domProps: { textContent: _vm._s(_vm.form.direccion) }
                     }),
+                    _vm._v(" "),
                     _c("br"),
                     _vm._v(" "),
-                    _c("strong", [_vm._v("Tel: ")]),
+                    _c("strong", [_vm._v("Tel:")]),
                     _vm._v(" "),
                     _c("div", {
                       domProps: { textContent: _vm._s(_vm.form.telefono) }
                     }),
+                    _vm._v(" "),
                     _c("br"),
                     _vm._v(" "),
-                    _c("strong", [_vm._v("Email: ")]),
+                    _c("strong", [_vm._v("Email:")]),
                     _vm._v(" "),
                     _c("div", {
                       domProps: { textContent: _vm._s(_vm.form.mail) }
                     }),
+                    _vm._v(" "),
                     _c("br"),
                     _vm._v(" "),
-                    _c("strong", [_vm._v("CUIT: ")]),
+                    _c("strong", [_vm._v("CUIT:")]),
                     _vm._v(" "),
                     _c("div", {
                       domProps: { textContent: _vm._s(_vm.form.doc) }
@@ -82121,11 +82198,9 @@ var render = function() {
             _c(
               "form",
               {
-                attrs: { action: "" },
                 on: {
                   submit: function($event) {
-                    $event.preventDefault()
-                    return _vm.guardarFactura()
+                    return _vm.enviarDatos()
                   }
                 }
               },
@@ -82194,7 +82269,37 @@ var render = function() {
                 }),
                 _vm._v(" "),
                 _c("div", { staticClass: "row" }, [
-                  _vm._m(1),
+                  _c("div", { staticClass: "col-md-2" }, [
+                    _c("label", { attrs: { for: "" } }, [
+                      _vm._v("Punto de Venta")
+                    ]),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.ptoventa,
+                          expression: "ptoventa"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: {
+                        type: "text",
+                        name: "ptoVenta",
+                        placeholder: "Punto de Venta"
+                      },
+                      domProps: { value: _vm.ptoventa },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.ptoventa = $event.target.value
+                        }
+                      }
+                    })
+                  ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "col-md-3" }, [
                     _c("label", { attrs: { for: "" } }, [
@@ -82257,7 +82362,7 @@ var render = function() {
                       _c("label", [_vm._v("Fecha")]),
                       _vm._v(" "),
                       _c("div", { staticClass: "input-group" }, [
-                        _vm._m(2),
+                        _vm._m(1),
                         _vm._v(" "),
                         _c("input", {
                           staticClass: "form-control float-right",
@@ -82386,12 +82491,7 @@ var render = function() {
                                       }
                                     }
                                   },
-                                  [
-                                    _vm._v(
-                                      _vm._s(resultado.articulo) +
-                                        "\n                            "
-                                    )
-                                  ]
+                                  [_vm._v(_vm._s(resultado.articulo))]
                                 )
                               }),
                               0
@@ -82481,14 +82581,12 @@ var render = function() {
                   },
                   [
                     _c("i", { staticClass: "fas fa-plus-circle" }),
-                    _vm._v(
-                      "\n                        Agregar\n                        "
-                    )
+                    _vm._v("\n              Agregar\n            ")
                   ]
                 ),
                 _vm._v(" "),
                 _c("table", { staticClass: "table" }, [
-                  _vm._m(3),
+                  _vm._m(2),
                   _vm._v(" "),
                   _c(
                     "tbody",
@@ -82584,7 +82682,7 @@ var render = function() {
                                     expression: "invoice_product.articulo"
                                   }
                                 ],
-                                staticClass: "form-control ",
+                                staticClass: "form-control",
                                 attrs: { type: "text" },
                                 domProps: { value: invoice_product.articulo },
                                 on: {
@@ -82785,11 +82883,9 @@ var render = function() {
                   "button",
                   {
                     staticClass: "btn btn-primary pull-right",
-                    attrs: { disabled: _vm.guardadoDeshabilitado },
-                    on: {
-                      click: function($event) {
-                        return _vm.enviarDatos()
-                      }
+                    attrs: {
+                      type: "submit",
+                      disabled: _vm.guardadoDeshabilitado
                     }
                   },
                   [_vm._v("Guardar Factura")]
@@ -82808,42 +82904,30 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "col-sm-4 invoice-col" }, [
-      _vm._v("\n                            De:\n                            "),
+      _vm._v("De:\n                "),
       _c("address", [
         _c("h2", [_vm._v("Jugueteria SA")]),
         _vm._v(" "),
         _c("br"),
         _vm._v(" "),
-        _c("strong", [_vm._v("Direccion:  ")]),
+        _c("strong", [_vm._v("Direccion:")]),
+        _vm._v(" "),
         _c("div", [_vm._v("San Francisco 123")]),
+        _vm._v(" "),
         _c("br"),
         _vm._v(" "),
-        _c("strong", [_vm._v("Telefono:  ")]),
+        _c("strong", [_vm._v("Telefono:")]),
+        _vm._v(" "),
         _c("div", [_vm._v("3735-433221")]),
+        _vm._v(" "),
         _c("br"),
         _vm._v(" "),
-        _c("strong", [_vm._v("CUIT:  ")]),
+        _c("strong", [_vm._v("CUIT:")]),
+        _vm._v(" "),
         _c("div", [_vm._v("22-8978622-9")]),
+        _vm._v(" "),
         _c("br")
       ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-md-2" }, [
-      _c("label", { attrs: { for: "" } }, [_vm._v("Punto de Venta")]),
-      _vm._v(" "),
-      _c("input", {
-        staticClass: "form-control",
-        attrs: {
-          type: "text",
-          name: "ptoVenta",
-          placeholder: "Punto de Venta",
-          value: "1"
-        }
-      })
     ])
   },
   function() {

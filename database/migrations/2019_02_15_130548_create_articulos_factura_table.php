@@ -13,7 +13,7 @@ class CreateArticulosFacturaTable extends Migration
      */
     public function up()
     {
-        Schema::create('articulos_factura', function (Blueprint $table) {
+        Schema::create('articulo_factura', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('articulo_id');
             $table->unsignedInteger('factura_id');
@@ -21,7 +21,7 @@ class CreateArticulosFacturaTable extends Migration
             $table->integer('cantidad');
             $table->string('medida');
             $table->decimal('preciounitario',8,2);
-            $table->decimal('subTotal',8,2);
+            $table->decimal('subtotal',8,2);
 
             $table->timestamps();
             $table->foreign('factura_id')->references('id')->on('facturas');
