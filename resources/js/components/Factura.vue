@@ -71,7 +71,7 @@
           </div>
 
           <div class="card-body">
-            <form @submit="enviarDatos()">
+            <form>
               <input type name="user_id" v-model="userid" hidden>
               <input type name="cuit" v-model="form.doc" hidden>
               <input type name="cliente_id" v-model="form.id" hidden>
@@ -320,11 +320,13 @@
                 </div>
               </div>
               <button
-                type="submit"
+                @click="enviarDatos"
                 class="btn btn-primary pull-right"
                 :disabled="guardadoDeshabilitado"
               >Guardar Factura</button>
             </form>
+
+            <!-- <button @click="test" class="btn btn-primary pull-right">Test</button> -->
           </div>
         </div>
       </div>
@@ -388,12 +390,15 @@ export default {
     };
   },
   methods: {
+    test() {
+      console.log(this.detalles);
+    },
     limpiar() {
-      this.clientes = {};
-      this.todos = {};
-      this.articulos = {};
-      this.form.reset();
-      this.detalles.reset();
+      // this.clientes = {};
+      // this.todos = {};
+      // this.articulos = {};
+      // this.form.reset();
+      // this.detalles.reset();
     },
     enviarDatos() {
       axios({
@@ -412,9 +417,7 @@ export default {
           user_id: 1
         }
       })
-        .then(function(response) {
-          this.limpiar();
-        })
+        .then(function(response) {})
         .catch(function(error) {
           console.log(error);
         })
@@ -489,7 +492,7 @@ export default {
       this.id = res.id;
       this.cod = res.codarticulo;
       this.articulo = res.articulo;
-      this.traerInventario(this.cod);
+      this.traerInventario(res.id);
 
       this.todos = {};
       this.articulos = {};
@@ -526,10 +529,13 @@ export default {
       var me = this;
 
       axios.get("/api/facturas/").then(response => {
-        var i = response.data.factura.length;
-        me.numfactura = response.data;
+        if (response.data.factura == null) {
+          me.numfactura = 1;
+        } else {
+          me.numfactura = response.data.factura.numfactura;
 
-        me.numfactura = me.numfactura.factura[i - 1].numfactura + 1;
+          me.numfactura++;
+        }
       });
     },
     fechar: function() {

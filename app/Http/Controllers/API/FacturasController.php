@@ -15,12 +15,14 @@ class FacturasController extends Controller
     {
 
 
-        $factura = Factura::orderBy('id')->first()->get();
+        $factura = Factura::orderBy('id', 'desc')->first();
 
-        return response()->json([
+        if ($factura) {
+            return response()->json([
 
-            'factura' => $factura
-        ]);
+                'factura' => $factura
+            ]);
+        } else { }
     }
 
     public function store()
@@ -58,7 +60,7 @@ class FacturasController extends Controller
         foreach (request()->detalle as $item) {
 
 
-            $aux['articulo_id'] = $item['codArticulo'];
+            $aux['articulo_id'] = $item['id'];
             $aux['factura_id'] = $ultimo;
             $aux['cantidad'] = $item['unidades'];
             $aux['medida'] = 'unidad';
@@ -82,7 +84,7 @@ class FacturasController extends Controller
             // Aqui modificar la logica para descontar del lote mas viejo
             $descuento = $item['unidades'];
 
-            $arti = Inventario::where('articulo_id', '=', $item['codArticulo'])
+            $arti = Inventario::where('articulo_id', '=', $item['id'])
                 ->where('cantidad', '>=', $item['unidades'])->get()->first();
 
             $arti->cantidad = intval($arti->cantidad) - intval($item['unidades']);
