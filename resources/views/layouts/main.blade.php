@@ -124,6 +124,20 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <p>Categorias</p>
                   </router-link>
                 </li>
+
+                <li class="nav-item">
+                  <router-link to="/suppliers" class="nav-link">
+                    <i class="fas fa-hand-pointer"></i>
+                    <p>Suppliers</p>
+                  </router-link>
+                </li>
+
+                <li class="nav-item">
+                  <router-link to="/marcas" class="nav-link">
+                    <i class="fas fa-hand-pointer"></i>
+                    <p>Marcas</p>
+                  </router-link>
+                </li>
                
               </ul>
             </li>

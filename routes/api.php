@@ -22,6 +22,14 @@ Route::apiResources([
 ]);
 
 Route::apiResources([
+    'suppliers' => 'API\SuppliersController'
+]);
+
+Route::apiResources([
+    'marcas' => 'API\MarcasController'
+]);
+
+Route::apiResources([
     'clientes' => 'API\ClientesController'
 ]);
 
@@ -49,6 +57,8 @@ Route::post('/moverinventario/{id}','API\InventariosController@moverInventario')
 Route::get('findCliente','API\ClientesController@searchUser');
 Route::get('findCategoria','API\CategoriasController@searchCategory');
 Route::get('findArticulo','API\ArticulosController@searchArticle');
+Route::get('findSupplier','API\SuppliersController@searchSupplier');
+Route::get('findMarca','API\MarcasController@searchMarca');
 
 Route::get('/buscarCliente/{buscar}','API\ClientesController@buscar');
 Route::get('/codArticulo/{codigo}','API\ArticulosController@buscarCodigo');
