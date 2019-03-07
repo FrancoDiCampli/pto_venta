@@ -20,7 +20,7 @@ class CreateInventariosTable extends Migration
             $table->integer('cantidad');
             $table->integer('stockminimo');
             $table->float('preciocosto', 8, 2);
-            $table->float('precioventa', 8, 2);
+
 
             $table->integer('lote')->nullable();
             $table->date('vencimiento');
@@ -29,7 +29,6 @@ class CreateInventariosTable extends Migration
 
             $table->foreign('articulo_id')->references('id')->on('articulos');
             $table->foreign('proveedor_id')->references('id')->on('suppliers');
-
         });
     }
 

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateArticulosFacturaTable extends Migration
+class CreateArticulosRemitoTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,18 +13,19 @@ class CreateArticulosFacturaTable extends Migration
      */
     public function up()
     {
-        Schema::create('articulo_factura', function (Blueprint $table) {
+        Schema::create('articulo_remito', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('articulo_id');
-            $table->unsignedInteger('factura_id');
+            $table->unsignedInteger('remito_id');
 
+            $table->integer('lote');
             $table->integer('cantidad');
             $table->string('medida');
-            $table->decimal('preciounitario');
+            $table->decimal('costo');
             $table->decimal('subtotal');
 
             $table->timestamps();
-            $table->foreign('factura_id')->references('id')->on('facturas');
+            $table->foreign('remito_id')->references('id')->on('remitos');
             $table->foreign('articulo_id')->references('id')->on('articulos');
         });
     }
@@ -36,6 +37,6 @@ class CreateArticulosFacturaTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('articulos_factura');
+        Schema::dropIfExists('articulos_remito');
     }
 }

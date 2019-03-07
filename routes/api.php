@@ -49,20 +49,24 @@ Route::apiResources([
     'facturas' => 'API\FacturasController'
 ]);
 
-Route::get('inventario/{id}','API\InventariosController@traerInventario')->name('inventario.traer');
+Route::apiResources([
+    'remitos' => 'API\RemitosController'
+]);
 
-Route::post('/moverinventario/{id}','API\InventariosController@moverInventario')->name('inventario.mover');
+Route::get('inventario/{id}', 'API\InventariosController@traerInventario')->name('inventario.traer');
 
-
-Route::get('findCliente','API\ClientesController@searchUser');
-Route::get('findCategoria','API\CategoriasController@searchCategory');
-Route::get('findArticulo','API\ArticulosController@searchArticle');
-Route::get('findSupplier','API\SuppliersController@searchSupplier');
-Route::get('findMarca','API\MarcasController@searchMarca');
-
-Route::get('/buscarCliente/{buscar}','API\ClientesController@buscar');
-Route::get('/codArticulo/{codigo}','API\ArticulosController@buscarCodigo');
-Route::get('/nomArticulo/{articulo}','API\ArticulosController@buscarArticulo');
-Route::get('/traerInventario/{articulo}','API\ArticulosController@traerInventario');
+Route::post('/moverinventario/{id}', 'API\InventariosController@moverInventario')->name('inventario.mover');
 
 
+Route::get('findCliente', 'API\ClientesController@searchUser');
+Route::get('findCategoria', 'API\CategoriasController@searchCategory');
+Route::get('findArticulo', 'API\ArticulosController@searchArticle');
+Route::get('findSupplier', 'API\SuppliersController@searchSupplier');
+Route::get('findMarca', 'API\MarcasController@searchMarca');
+
+Route::get('/buscarCliente/{buscar}', 'API\ClientesController@buscar');
+Route::get('/codArticulo/{codigo}', 'API\ArticulosController@buscarCodigo');
+Route::get('/nomArticulo/{articulo}', 'API\ArticulosController@buscarArticulo');
+Route::get('/traerInventario/{articulo}', 'API\ArticulosController@traerInventario');
+
+Route::get('/proveedores/{buscar}', 'API\SuppliersController@buscar');
