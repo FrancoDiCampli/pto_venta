@@ -4,7 +4,7 @@
       <div class="col-md-12">
         <div class="card">
           <div class="card-header card-header-primary">
-            <h4 class="card-title">Nuevo Remito</h4>
+            <h4 class="card-title">Nueva Factura</h4>
 
             <div class="invoice p-3 mb-3">
               <div class="row">
@@ -28,8 +28,8 @@
                   <div>
                     <input
                       type="text"
-                      placeholder="Buscar Proveedor..."
-                      v-model="buscar"
+                      placeholder="Buscar Cliente..."
+                      v-model="buscarCliente"
                       v-on:keyup="autoComplete"
                       class="form-control"
                     >
@@ -41,7 +41,7 @@
                           v-for="(result,index) in clientes"
                           :key="index"
                           @click="seleccionaCliente(result)"
-                        >{{ result.proveedor }}</li>
+                        >{{ result.nombre }}</li>
                       </ul>
                     </div>
                   </div>
@@ -60,7 +60,7 @@
                     <div v-text="form.mail"></div>
                     <br>
                     <strong>CUIT:</strong>
-                    <div v-text="form.cuit"></div>
+                    <div v-text="form.doc"></div>
                     <input type="text" v-model="cuit" hidden>
                   </address>
                 </div>
@@ -73,8 +73,8 @@
           <div class="card-body">
             <form>
               <input type name="user_id" v-model="userid" hidden>
-              <input type name="cuit" v-model="form.cuit" hidden>
-              <input type name="proveedor_id" v-model="form.id" hidden>
+              <input type name="cuit" v-model="form.doc" hidden>
+              <input type name="cliente_id" v-model="form.id" hidden>
               <div class="row">
                 <div class="col-md-2">
                   <label for>Punto de Venta</label>
@@ -88,14 +88,24 @@
                 </div>
 
                 <div class="col-md-3">
-                  <label for>No. Remito</label>
+                  <label for>Num Factura</label>
                   
                   <input
                     type="text"
+                    v-show="facturas"
                     class="form-control"
-                    placeholder="Numero de Remito"
-                    name="numRemito"
-                    v-model="numremito"
+                    placeholder="Numero de Factura"
+                    name="numFactura"
+                    v-model="numfactura"
+                  >
+                  
+                  <input
+                    type="text"
+                    v-show="!facturas"
+                    class="form-control"
+                    placeholder="Numero de Factura"
+                    name="numFactura"
+                    value="1"
                   >
                 </div>
 
@@ -127,7 +137,7 @@
 
               <div class="row fila">
                 <!-- Busqueda por cod de articulo, no por id -->
-                <div class="col-md-2">
+                <div class="col-md-4">
                   <label for>CodArticulo</label>
                   <input
                     type="text"
@@ -173,17 +183,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-md-2">
-                  <label for>Lote</label>
-                  <input
-                    type="number"
-                    class="form-control"
-                    placeholder="Lote"
-                    min="1"
-                    step="1"
-                    v-model="lote"
-                  >
-                </div>
+
                 <div class="col-md-2">
                   <label for>Unidades</label>
                   <input
@@ -191,6 +191,7 @@
                     class="form-control"
                     placeholder="Unidades"
                     min="1"
+                    :max="max"
                     step="1"
                     v-model="disponible"
                   >
@@ -227,7 +228,6 @@
                     <th>CodArticulo</th>
                     <th>Articulo</th>
                     <th>Cantidad</th>
-                    <th>Lote</th>
                     <th>P. Unitario</th>
                     <th>subTotal</th>
                   </tr>
@@ -261,16 +261,6 @@
                         class="form-control text-right"
                         type="text"
                         v-model="invoice_product.unidades"
-                      >
-                    </td>
-                    <td>
-                      <input
-                        name="lote[]"
-                        class="form-control text-right"
-                        type="number"
-                        min="0"
-                        step="1"
-                        v-model="invoice_product.lote"
                       >
                     </td>
                     <td>
@@ -334,7 +324,7 @@
               @click="enviarDatos"
               class="btn btn-primary pull-right"
               :disabled="guardadoDeshabilitado"
-            >Guardar Remito</button>
+            >Guardar Factura</button>
             <!-- <button @click="test" class="btn btn-primary pull-right">Test</button> -->
           </div>
         </div>
@@ -351,9 +341,9 @@ export default {
       ptoventa: 1,
       fecha: "",
       facturas: true,
-      numremito: null,
+      numfactura: 1,
       cliente: "",
-      buscar: "",
+      buscarCliente: "",
       clientes: {},
       userid: "",
       cod: "",
@@ -362,7 +352,7 @@ export default {
       id: "",
       todos: {},
       disponible: "",
-      lote: null,
+      max: "",
       precio: "",
       botonDeshabilitado: true,
       total: 0,
@@ -371,10 +361,18 @@ export default {
       cuit: "",
       form: new Form({
         id: "",
-        proveedor: "",
-        cuit: "",
+        nombre: "",
+        doc: "",
         direccion: "",
-        telefono: ""
+        cp: "",
+        percibeiva: 0,
+        percibeiibb: 0,
+        condicionpago: "",
+        enviarcomprobante: 0,
+        mail: "",
+        telefono: "",
+        estado: 0,
+        foto: ""
       }),
       detalles: [
         {
@@ -382,7 +380,6 @@ export default {
           codArticulo: "",
           articulo: "",
           precioUnitario: "",
-          lote: "",
           unidades: "",
           sTotal: 0
         }
@@ -392,30 +389,18 @@ export default {
     };
   },
   methods: {
-    test() {
-      this.detalles = {};
-      this.form.reset();
-      this.ptoventa = 1;
-      this.numfactura = null;
-      this.fecha = null;
-      this.total = 0;
-      this.invoice_tax = 21;
-      this.cod = null;
-      this.articulo = null;
-      this.fechar();
-      this.traerFactura();
-    },
+    test() {},
 
     enviarDatos() {
       axios({
         method: "post",
-        url: "/api/remitos",
+        url: "/api/facturar",
         data: {
-          detalles: this.detalles,
+          detalle: this.detalles,
           cliente: this.form,
           ptoventa: this.ptoventa,
-          numremito: this.numremito,
-          cuit: this.form.cuit,
+          numFactura: this.numfactura,
+          cuit: this.form.doc,
           fecha: this.fecha,
           total: this.total,
           recargo: this.invoice_tax,
@@ -433,7 +418,7 @@ export default {
       this.detalles.push({
         id: this.id,
         codArticulo: this.cod,
-        lote: this.lote,
+
         articulo: this.articulo,
         precioUnitario: this.precio,
         unidades: this.disponible,
@@ -494,12 +479,13 @@ export default {
     },
 
     cargarArticulo(res) {
-      this.precio = res.costo;
+      console.log(res);
+      this.precio = res.precio;
       this.id = res.id;
       this.cod = res.codarticulo;
       this.articulo = res.articulo;
-      this.lote = null;
-      this.disponible = null;
+      this.traerInventario(res.id);
+
       this.todos = {};
       this.articulos = {};
       this.botonDeshabilitado = false;
@@ -508,28 +494,41 @@ export default {
       axios.get("/api/traerInventario/" + val).then(response => {
         this.disponible = response.data.stock;
         this.max = response.data.stock;
-        this.precio = response.data.inventarios[0].precioventa;
       });
     },
-
+    guardarFactura() {},
     autoComplete() {
       var me = this;
       me.clientes = {};
-      if (me.buscar.length > 0) {
-        axios.get("/api/proveedores/" + me.buscar).then(response => {
+      if (me.buscarCliente.length > 0) {
+        axios.get("/api/buscarCliente/" + me.buscarCliente).then(response => {
           me.userid = response.data.user;
-          me.clientes = response.data.proveedores;
+          me.clientes = response.data.clientes;
         });
       } else {
         me.clientes = {};
-        me.buscar = "";
+        me.buscarCliente = "";
       }
     },
     seleccionaCliente(cliente) {
       this.cui = cliente.doc;
       this.form.fill(cliente);
-      this.buscar = "";
+      this.buscarCliente = "";
       this.clientes = "";
+    },
+    traerFactura() {
+      var me = this;
+
+      axios.get("/api/facturas/").then(response => {
+        if (response.data.factura == null) {
+          me.numfactura = 1;
+        } else {
+          console.log(response.data.factura);
+          me.numfactura = response.data.factura;
+
+          me.numfactura++;
+        }
+      });
     },
     fechar: function() {
       this.fecha = moment().format("DD-MM-YYYY");
@@ -559,13 +558,9 @@ export default {
     },
     limpiarArticulo() {
       this.articulo = "";
-      this.lote = null;
-      this.disponible = null;
     },
     limpiarCodigo() {
       this.cod = "";
-      this.lote = null;
-      this.disponible = null;
     },
     eliminarPorNulo() {
       this.detalles.splice(0);
@@ -601,6 +596,7 @@ export default {
     }
   },
   mounted() {
+    this.traerFactura();
     this.fechar();
   }
 };

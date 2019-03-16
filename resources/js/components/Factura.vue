@@ -319,13 +319,12 @@
                   </div>
                 </div>
               </div>
-              <button
-                @click="enviarDatos"
-                class="btn btn-primary pull-right"
-                :disabled="guardadoDeshabilitado"
-              >Guardar Factura</button>
             </form>
-
+            <button
+              @click="enviarDatos"
+              class="btn btn-primary pull-right"
+              :disabled="guardadoDeshabilitado"
+            >Guardar Factura</button>
             <!-- <button @click="test" class="btn btn-primary pull-right">Test</button> -->
           </div>
         </div>
@@ -354,7 +353,7 @@ export default {
       todos: {},
       disponible: "",
       max: "",
-      precio: "",
+      precio: 0,
       botonDeshabilitado: true,
       total: 0,
       invoice_tax: 21,
@@ -492,6 +491,7 @@ export default {
     },
 
     cargarArticulo(res) {
+      console.log(res);
       this.precio = res.precio;
       this.id = res.id;
       this.cod = res.codarticulo;
@@ -506,7 +506,6 @@ export default {
       axios.get("/api/traerInventario/" + val).then(response => {
         this.disponible = response.data.stock;
         this.max = response.data.stock;
-        this.precio = response.data.inventarios[0].precioventa;
       });
     },
     guardarFactura() {},
@@ -524,7 +523,7 @@ export default {
       }
     },
     seleccionaCliente(cliente) {
-      this.cui = cliente.doc;
+      this.cuit = cliente.doc;
       this.form.fill(cliente);
       this.buscarCliente = "";
       this.clientes = "";
@@ -533,10 +532,11 @@ export default {
       var me = this;
 
       axios.get("/api/facturas/").then(response => {
-        if (response.data.factura == null) {
+        console.log(response.data.factura);
+        if (response.data.factura === null) {
           me.numfactura = 1;
         } else {
-          me.numfactura = response.data.factura.numfactura;
+          me.numfactura = response.data.factura;
 
           me.numfactura++;
         }

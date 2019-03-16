@@ -18,6 +18,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('{path}',"HomeController@index")->where('path','([A-z\d-\/_.]+)?');
+Route::get('{path}', "HomeController@index")->where('path', '([A-z\d-\/_.]+)?');
 
-// Route::get('inventario/{id}','InventariosController@traerInventario')->name('inventario.traer');
+
+Route::post('/print', 'ImpresionesController@print')->name('print');

@@ -6,8 +6,6 @@ Vue.prototype.moment = moment;
 
 import { Form, HasError, AlertError } from "vform";
 
-import datepicker from "vuejs-datepicker";
-
 window.Fire = new Vue();
 
 import swal from "sweetalert2";
@@ -51,7 +49,11 @@ let routes = [
     { path: "/suppliers", component: require("./components/Suppliers.vue") },
     { path: "/marcas", component: require("./components/Marcas.vue") },
     { path: "/factura", component: require("./components/Factura.vue") },
-    { path: "/remito", component: require("./components/Remito.vue") }
+    { path: "/remito", component: require("./components/Remito.vue") },
+    { path: "/remitos", component: require("./components/Remito.vue") },
+    { path: "/compras", component: require("./components/Compras.vue") },
+    { path: "/afip", component: require("./components/Afip.vue") },
+    { path: "/lista", component: require("./components/Facturas.vue") }
 ];
 
 const router = new VueRouter({
@@ -80,10 +82,11 @@ Vue.component("pagination", require("laravel-vue-pagination"));
 const app = new Vue({
     el: "#app",
     router,
-    datepicker,
+
     data: {
         search: ""
     },
+
     methods: {
         searchit() {
             Fire.$emit("searching");

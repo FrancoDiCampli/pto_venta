@@ -19,7 +19,8 @@
               <tbody>
                 <tr>
                   <th>ID</th>
-                  <th>CodArticulo</th>
+                  <!-- <th>CodArticulo</th> -->
+                  <th>BarCode</th>
 
                   <th>Articulo</th>
 
@@ -33,10 +34,15 @@
 
                 <tr v-for="articulo in articulos.data" :key="articulo.id">
                   <td>{{articulo.id}}</td>
-                  <td>{{articulo.codarticulo}}</td>
+                  <!-- <td>{{articulo.codarticulo}}</td> -->
+                  <td>
+                    <a href @click.prevent="print(articulo.codarticulo)">
+                      <barcode :value="articulo.codarticulo" :options="options" :tag="tag"></barcode>
+                    </a>
+                  </td>
                   <td>{{articulo.articulo}}</td>
                   <td>{{articulo.precio}}</td>
-                  <td>{{articulo.stock[0]}}</td>
+                  <td>{{articulo.stock.total}}</td>
 
                   <td>
                     <img :src="articulo.foto" style="width:120px;">
@@ -214,10 +220,36 @@
       </div>
     </div>
     <!-- end Modal -->
+    <!-- Modal para preguntar cantidad de elemento a imprimir -->
+    <div
+      class="modal fade"
+      id="barcode"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="barcodeExample"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5>Ingrese la cantidad a imprimir</h5>
+          </div>
+          <div class="modal-body">
+            <form action="/print" method="POST">
+              <input type="text" class="form-control" name="code" v-model="code" hidden>
+              <input type="text" class="form-control" name="cant">
+              <button class="btn btn-success" type="submit">Print</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Fin del modal -->
   </div>
 </template>
 
 <script>
+import VueBarcode from "@xkeshi/vue-barcode";
 export default {
   data() {
     return {
@@ -231,7 +263,8 @@ export default {
       image: "",
       busqueda: {},
       id: 10,
-
+      code: null,
+      height: 100,
       form: new Form({
         id: "",
         codarticulo: "",
@@ -243,8 +276,22 @@ export default {
         foto: "",
         marca_id: 0,
         categoria_id: 0
-      })
+      }),
+      tag: "svg",
+      options: {
+        lineColor: "#000",
+        fontSize: 12,
+        font: "Courier",
+        width: 2,
+        height: 30,
+        marginBottom: 20,
+        format: "MSI",
+        background: "#fff"
+      }
     };
+  },
+  components: {
+    barcode: VueBarcode
   },
   watch: {
     utilidades: function() {
@@ -253,6 +300,10 @@ export default {
     }
   },
   methods: {
+    print(val) {
+      this.code = val;
+      $("#barcode").modal("show");
+    },
     deleteCliente(id) {
       swal({
         title: "Estas Seguro?",
@@ -330,16 +381,22 @@ export default {
     },
     loadArticles() {
       this.form.reset();
+
+      var me = this;
       axios
         .get("api/articulos")
-        .then(
-          ({ data }) => (
-            (this.articulos = data.articulos),
-            (this.marcas = data.marcas),
-            (this.categorias = data.categorias),
-            console.log(data.articulos.data[0].stock[0].total)
-          )
-        );
+        .then(function(response) {
+          (me.articulos = response.data.articulos),
+            (me.marcas = response.data.marcas),
+            (me.categorias = response.data.categorias);
+        })
+        .catch(function(error) {
+          // handle error
+          console.log(error);
+        })
+        .then(function() {
+          // always executed
+        });
     },
 
     createArticle() {

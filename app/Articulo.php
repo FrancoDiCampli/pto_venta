@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\Marca;
 use App\Categoria;
+use App\Remito;
 
 class Articulo extends Model
 {
@@ -46,7 +47,7 @@ class Articulo extends Model
     {
 
         return $this->belongsToMany('App\Factura')
-            ->withPivot('articulo_factura', 'cantidad', 'medida', 'preciounitario', 'subtotal')
+            ->withPivot('cantidad', 'medida', 'preciounitario', 'subtotal')
             ->withTimestamps();
     }
 
@@ -64,7 +65,7 @@ class Articulo extends Model
     {
 
         return $this->belongsToMany('App\Remito')
-            ->withPivot('articulo_remito', 'lote', 'cantidad', 'medida', 'costo', 'subtotal')
+            ->withPivot('lote', 'cantidad', 'medida', 'costo', 'subtotal')
             ->withTimestamps();
     }
 }

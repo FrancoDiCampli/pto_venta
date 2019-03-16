@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Remito;
+use App\Articulo;
 use App\Inventario;
 use App\Movimiento;
 use Illuminate\Http\Request;
@@ -10,9 +11,14 @@ use App\Http\Controllers\Controller;
 
 class RemitosController extends Controller
 {
+
+    public function index()
+    {
+        return $remitos = Remito::orderBy('fecha')->get();
+    }
+
     public function store()
     {
-
 
         $detalles = request()->detalle;
 
@@ -98,5 +104,35 @@ class RemitosController extends Controller
 
             $mov->save();
         }
+    }
+
+    public function remitosFecha($inicio, $fin)
+    {
+
+        $remitos =  Remito::where('fecha', '>=', $inicio)
+            ->where('fecha', '<=', $fin)->get();
+
+        $detalles =  $remitos->toArray();
+
+
+        return response()->json([
+            'remitos' => $remitos,
+            'detalles' => $detalles
+
+        ]);
+    }
+
+    public function remitosProducto($producto)
+    {
+
+        $remitos = Articulo::find($producto)->remitos()->orderBy('fecha')->get();
+        $detalles =  $remitos->toArray();
+
+
+        return response()->json([
+            'remitos' => $remitos,
+            'detalles' => $detalles
+
+        ]);
     }
 }

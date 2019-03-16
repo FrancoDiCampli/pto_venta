@@ -9,13 +9,14 @@ use App\Http\Requests\StoreCliente;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateCliente;
 use Illuminate\Support\Facades\Auth;
+use function GuzzleHttp\json_decode;
 
 class ClientesController extends Controller
 {
-  
-    
-        
-    
+
+
+
+
     /**
      * Display a listing of the resource.
      *
@@ -26,95 +27,93 @@ class ClientesController extends Controller
         return Cliente::latest()->paginate(5);
     }
 
-  
+
     public function store(StoreCliente $request)
     {
-        $ruta = public_path().'/img/clientes/';
+        $ruta = public_path() . '/img/clientes/';
         $name = 'noimage.png';
-        
 
-        if($request->get('foto'))
-            {
-                $carpeta = public_path().'/img/clientes/';
-                    if (!file_exists($carpeta)) {
-                        mkdir($carpeta, 777, true);
-                }
 
-                $image = $request->get('foto');
-                // $name = $this->random_string() . '.' . $image->getClientOriginalExtension();
-                $name = time().'.' . explode('/', explode(':', substr($image, 0, strpos($image, ';')))[1])[1];
-                \Image::make($request->get('foto'))->save(public_path('img/clientes/').$name);
+        if ($request->get('foto')) {
+            $carpeta = public_path() . '/img/clientes/';
+            if (!file_exists($carpeta)) {
+                mkdir($carpeta, 777, true);
             }
-        
-        $foto = '/img/clientes/'.$name;
-        
+
+            $image = $request->get('foto');
+            // $name = $this->random_string() . '.' . $image->getClientOriginalExtension();
+            $name = time() . '.' . explode('/', explode(':', substr($image, 0, strpos($image, ';')))[1])[1];
+            \Image::make($request->get('foto'))->save(public_path('img/clientes/') . $name);
+        }
+
+        $foto = '/img/clientes/' . $name;
+
 
 
         $data = $request->validated();
 
         $data['nombre'] = ucwords($data['nombre']);
         $data['direccion'] = ucwords($data['direccion']);
-        $data['foto']=$foto;
-         
+        $data['foto'] = $foto;
+
         $clientes = Cliente::create($data);
     }
     protected function random_string()
     {
         $key = '';
-        $keys = array_merge( range('a','z'), range(0,9) );
-     
-        for($i=0; $i<10; $i++)
-        {
+        $keys = array_merge(range('a', 'z'), range(0, 9));
+
+        for ($i = 0; $i < 10; $i++) {
             $key .= $keys[array_rand($keys)];
         }
-     
+
         return $key;
     }
 
-   
-   
-    public function update(UpdateCliente $request,$id){
 
-        $cliente = Cliente::findOrFail($id); 
 
-        $ruta = public_path().'img/clientes/';
+    public function update(UpdateCliente $request, $id)
+    {
 
-       
-          
-        if($request->get('foto')!= $cliente->foto){
+        $cliente = Cliente::findOrFail($id);
+
+        $ruta = public_path() . 'img/clientes/';
+
+
+
+        if ($request->get('foto') != $cliente->foto) {
             $carpeta = '/img/clientes/';
-                    if (!file_exists($carpeta)) {
-                        mkdir($carpeta, 0777, true);
-                }
+            if (!file_exists($carpeta)) {
+                mkdir($carpeta, 0777, true);
+            }
             $eliminar = $cliente->foto;
 
-            if(file_exists($eliminar)){
+            if (file_exists($eliminar)) {
                 @unlink($eliminar);
             }
 
             $image = $request->get('foto');
             // $name = $this->random_string() . '.' . $image->getClientOriginalExtension();
-            $name = time().'.' . explode('/', explode(':', substr($image, 0, strpos($image, ';')))[1])[1];
-            \Image::make($request->get('foto'))->save(public_path('img/clientes/').$name);
+            $name = time() . '.' . explode('/', explode(':', substr($image, 0, strpos($image, ';')))[1])[1];
+            \Image::make($request->get('foto'))->save(public_path('img/clientes/') . $name);
 
-            $foto = 'img/clientes/'.$name;
-            }
-            else{
-                $foto = $cliente->foto;
-            }
-        
+            $foto = 'img/clientes/' . $name;
+        } else {
+            $foto = $cliente->foto;
+        }
+
 
         $data = $request->validated();
         $data['nombre'] = ucwords($data['nombre']);
         $data['direccion'] = ucwords($data['direccion']);
 
-        $data['foto']=$foto;
+        $data['foto'] = $foto;
 
-       $cliente->update($data);
-        return ['message'=>'editado'];
+        $cliente->update($data);
+        return ['message' => 'editado'];
     }
 
-    
+
 
     /**
      * Remove the specified resource from storage.
@@ -128,36 +127,50 @@ class ClientesController extends Controller
 
         $user->delete();
 
-        return ['msg','Cliente eliminado'];
+        return ['msg', 'Cliente eliminado'];
     }
 
-    public function validarDato($cadena){
+    public function validarDato($cadena)
+    {
 
-        return $cadena = str_replace('.','',$cadena);
+        return $cadena = str_replace('.', '', $cadena);
     }
 
-    public function searchUser(){
+    public function searchUser()
+    {
 
         if ($search = \Request::get('q')) {
-            $users = Cliente::where(function($query) use ($search){
-                $query->where('nombre','LIKE',"%$search%")
-                        ->orWhere('mail','LIKE',"%$search%")
-                        ->orWhere('doc','LIKE',"%$search%")
-                        ->orWhere('telefono','LIKE',"%$search%");
+            $users = Cliente::where(function ($query) use ($search) {
+                $query->where('nombre', 'LIKE', "%$search%")
+                    ->orWhere('mail', 'LIKE', "%$search%")
+                    ->orWhere('doc', 'LIKE', "%$search%")
+                    ->orWhere('telefono', 'LIKE', "%$search%");
             })->paginate(20);
-        }else{
+        } else {
             $users = Cliente::latest()->paginate(5);
         }
         return $users;
     }
 
 
-    public function buscar(Request $request){
-        $clientes = Cliente::where('nombre','LIKE','%'.$request->buscar.'%')->get();
+    public function buscar(Request $request)
+    {
+        $clientes = Cliente::where('nombre', 'LIKE', '%' . $request->buscar . '%')->get();
         $user = 1;
         return response()->json([
-            'user'=>$user,
-            'clientes' =>$clientes
-            ]);
+            'user' => $user,
+            'clientes' => $clientes
+        ]);
+    }
+
+    public function show($id)
+    {
+
+        return $cliente = Cliente::find($id);
+
+        return response()->json([
+            'cliente' => $cliente
+
+        ]);
     }
 }
