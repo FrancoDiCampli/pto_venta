@@ -79,6 +79,7 @@ const toast = swal.mixin({
 window.toast = toast;
 
 Vue.component("pagination", require("laravel-vue-pagination"));
+Vue.component("grafico", require("./components/graph/Graph.vue"));
 
 const app = new Vue({
     el: "#app",

@@ -94,7 +94,9 @@
           </div>
           <!-- /.card-body -->
           <div class="card-footer">
-            <grafico></grafico>
+            <div class="small">
+              <line-chart :chart-data="datacollection"></line-chart>
+            </div>
           </div>
         </div>
         <!-- /.card -->
@@ -107,9 +109,8 @@
 import Datepicker from "vuejs-datepicker";
 import { es } from "vuejs-datepicker/dist/locale";
 import moment from "moment";
-import { Line } from "vue-chartjs";
+import LineChart from "./graph/LineChart.js";
 export default {
-  components: { Line },
   data() {
     return {
       i: "",
@@ -125,11 +126,15 @@ export default {
       productos: {},
       deshabilitado: true,
       cod: "",
-      xprod: false
+      xprod: false,
+      datacollection: {},
+      importe: null,
+      dia: null
     };
   },
   components: {
-    Datepicker
+    Datepicker,
+    LineChart
   },
   watch: {
     start: function() {
@@ -169,7 +174,6 @@ export default {
         .then(function(response) {
           me.remitos = response.data.remitos;
           me.detalles = response.data.detalles;
-          console.log(response);
         })
         .catch(function(error) {
           // handle error
@@ -188,6 +192,27 @@ export default {
         .then(function(response) {
           me.remitos = response.data.remitos;
           me.detalles = response.data.detalles;
+
+          let results = response.data.remitos;
+
+          let fecha = results.map(a => a.fecha);
+          let tot = results.map(a => a.total);
+
+          me.importe = tot;
+
+          me.dia = fecha;
+
+          me.datacollection = {
+            labels: me.dia,
+            datasets: [
+              {
+                label: "Compras durante el periodo",
+                backgroundColor: "#f87979",
+                data: me.importe
+              }
+            ]
+          };
+          console.log(me.datacollection);
         })
         .catch(function(error) {
           // handle error
@@ -196,6 +221,8 @@ export default {
         .then(function() {
           // always executed
         });
+      console.log(this.datacollection);
+      // this.fillData(this.remitos.total);
     },
     seleccionaProducto(prod) {
       this.buscarProducto = prod.articulo;
@@ -229,6 +256,7 @@ export default {
       return tot;
     }
   },
-  created() {}
+  created() {},
+  mounted() {}
 };
 </script>
