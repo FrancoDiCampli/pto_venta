@@ -129,6 +129,7 @@ class RemitosController extends Controller
         $detalles =  $remitos->toArray();
 
 
+
         return response()->json([
             'remitos' => $remitos,
             'detalles' => $detalles

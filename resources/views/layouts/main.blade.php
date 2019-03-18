@@ -228,6 +228,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </p>
               </router-link>
             </li>
+            <li class="nav-item">
+               <router-link to="/grafico" class="nav-link">
+                <i class="fas fa-file-invoice"></i>
+                  <p>
+                  Graficos
+                 
+                </p>
+              </router-link>
+            </li>
             @can('isAdmin')
             <li class="nav-item">
                <router-link to="/developer" class="nav-link">

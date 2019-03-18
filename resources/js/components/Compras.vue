@@ -79,7 +79,8 @@
                     <tr v-for="remito in remitos" :key="remito.id">
                       <td>{{remito.numremito}}</td>
                       <td>{{remito.fecha}}</td>
-                      <td>{{remito.total}}</td>
+                      <td v-if="xprod">{{remito.pivot.subtotal}}</td>
+                      <td v-else>{{remito.total}}</td>
                     </tr>
                     <tr>Total:
                       <p>{{total}}</p>
@@ -92,7 +93,9 @@
             <!-- /.form group -->
           </div>
           <!-- /.card-body -->
-          <div class="card-footer"></div>
+          <div class="card-footer">
+            <grafico></grafico>
+          </div>
         </div>
         <!-- /.card -->
       </div>
@@ -104,7 +107,9 @@
 import Datepicker from "vuejs-datepicker";
 import { es } from "vuejs-datepicker/dist/locale";
 import moment from "moment";
+import { Line } from "vue-chartjs";
 export default {
+  components: { Line },
   data() {
     return {
       i: "",
@@ -119,7 +124,8 @@ export default {
       buscarProducto: "",
       productos: {},
       deshabilitado: true,
-      cod: ""
+      cod: "",
+      xprod: false
     };
   },
   components: {
@@ -156,6 +162,8 @@ export default {
   methods: {
     loadRemitosProducto() {
       var me = this;
+      me.remitos = {};
+      me.xprod = true;
       axios
         .get("api/remitosProducto/" + me.cod)
         .then(function(response) {
@@ -173,7 +181,8 @@ export default {
     },
     loadRemitosFecha() {
       var me = this;
-
+      me.xprod = false;
+      me.remitos = {};
       axios
         .get("api/remitos/" + me.i + "/" + me.f)
         .then(function(response) {

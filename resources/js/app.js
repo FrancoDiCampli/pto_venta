@@ -53,7 +53,8 @@ let routes = [
     { path: "/remitos", component: require("./components/Remito.vue") },
     { path: "/compras", component: require("./components/Compras.vue") },
     { path: "/afip", component: require("./components/Afip.vue") },
-    { path: "/lista", component: require("./components/Facturas.vue") }
+    { path: "/lista", component: require("./components/Facturas.vue") },
+    { path: "/grafico", component: require("./components/graph/Graph.vue") }
 ];
 
 const router = new VueRouter({
