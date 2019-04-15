@@ -8,7 +8,8 @@
 
             <div class="invoice p-3 mb-3">
               <div class="row">
-                <div class="col-sm-4 invoice-col">De:
+                <div class="col-sm-4 invoice-col">
+                  De:
                   <address>
                     <h2>Jugueteria SA</h2>
                     <br>
@@ -41,13 +42,13 @@
                           v-for="(result,index) in clientes"
                           :key="index"
                           @click="seleccionaCliente(result)"
-                        >{{ result.nombre }}</li>
+                        >{{ result.razonsocial }}</li>
                       </ul>
                     </div>
                   </div>
 
                   <address>
-                    <h2 v-text="form.nombre"></h2>
+                    <h2 v-text="form.razonsocial"></h2>
 
                     <strong>Direccion:</strong>
                     <div v-text="form.direccion"></div>
@@ -60,7 +61,7 @@
                     <div v-text="form.mail"></div>
                     <br>
                     <strong>CUIT:</strong>
-                    <div v-text="form.doc"></div>
+                    <div v-text="form.cuit"></div>
                     <input type="text" v-model="cuit" hidden>
                   </address>
                 </div>
@@ -73,7 +74,7 @@
           <div class="card-body">
             <form>
               <input type name="user_id" v-model="userid" hidden>
-              <input type name="cuit" v-model="form.doc" hidden>
+              <input type name="cuit" v-model="form.cuit" hidden>
               <input type name="cliente_id" v-model="form.id" hidden>
               <div class="row">
                 <div class="col-md-2">
@@ -89,7 +90,7 @@
 
                 <div class="col-md-3">
                   <label for>Num Factura</label>
-                  
+
                   <input
                     type="text"
                     v-show="facturas"
@@ -98,7 +99,7 @@
                     name="numFactura"
                     v-model="numfactura"
                   >
-                  
+
                   <input
                     type="text"
                     v-show="!facturas"
@@ -361,18 +362,22 @@ export default {
       cuit: "",
       form: new Form({
         id: "",
-        nombre: "",
+        razonsocial: "",
         doc: "",
-        direccion: "",
-        cp: "",
-        percibeiva: 0,
-        percibeiibb: 0,
+        cuit: "",
+        condicioniva: "",
         condicionpago: "",
-        enviarcomprobante: 0,
+        enviarcomprobante: false,
         mail: "",
         telefono: "",
+        sexo: "",
         estado: 0,
-        foto: ""
+        direccion: "",
+        localidad: "",
+        provincia: "",
+        cp: "",
+        foto: "",
+        sexo: ""
       }),
       detalles: [
         {
@@ -412,7 +417,7 @@ export default {
           cliente: this.form,
           ptoventa: this.ptoventa,
           numFactura: this.numfactura,
-          cuit: this.form.doc,
+          cuit: this.form.cuit,
           fecha: this.fecha,
           total: this.total,
           recargo: this.invoice_tax,
@@ -532,11 +537,9 @@ export default {
       var me = this;
 
       axios.get("/api/facturas/").then(response => {
-        console.log(response.data.factura);
-        if (response.data.factura === null) {
-          me.numfactura = 1;
+        if (response.data.factura.numfactura == null) {
         } else {
-          me.numfactura = response.data.factura;
+          me.numfactura = response.data.factura.numfactura;
 
           me.numfactura++;
         }

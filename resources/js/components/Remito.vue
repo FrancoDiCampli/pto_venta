@@ -8,7 +8,8 @@
 
             <div class="invoice p-3 mb-3">
               <div class="row">
-                <div class="col-sm-4 invoice-col">De:
+                <div class="col-sm-4 invoice-col">
+                  De:
                   <address>
                     <h2>Jugueteria SA</h2>
                     <br>
@@ -89,12 +90,12 @@
 
                 <div class="col-md-3">
                   <label for>No. Remito</label>
-                  
+
                   <input
                     type="text"
                     class="form-control"
                     placeholder="Numero de Remito"
-                    name="numRemito"
+                    name="numremito"
                     v-model="numremito"
                   >
                 </div>
@@ -407,6 +408,7 @@ export default {
     },
 
     enviarDatos() {
+      console.log(this.numremito);
       axios({
         method: "post",
         url: "/api/remitos",
@@ -572,6 +574,9 @@ export default {
     }
   },
   watch: {
+    numremito() {
+      console.log(this.numremito);
+    },
     detalle(newval, oldval) {
       if (this.cuit > 0 && this.detalle > 0 && this.total > 0) {
         this.guardadoDeshabilitado = false;

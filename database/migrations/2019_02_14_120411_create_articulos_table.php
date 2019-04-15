@@ -24,7 +24,8 @@ class CreateArticulosTable extends Migration
             $table->float('costo');
             $table->float('utilidades');
             $table->float('precio');
-
+            $table->float('alicuota');
+            $table->boolean('estado');
             $table->unsignedInteger('marca_id');
             $table->unsignedInteger('categoria_id');
 

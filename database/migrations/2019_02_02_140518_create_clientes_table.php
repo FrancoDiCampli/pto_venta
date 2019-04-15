@@ -14,29 +14,31 @@ class CreateClientesTable extends Migration
     public function up()
     {
         Schema::create('clientes', function (Blueprint $table) {
-            
-            $table->increments('id');
-            $table->string('nombre');
-           
-            $table->string('doc');
-            $table->string('direccion');
-            $table->string('cp')->nullable();
 
-            
-            $table->boolean('percibeiva')->default(false);
-            $table->boolean('percibeiibb')->default(false);
+            $table->increments('id');
+            $table->string('razonsocial');
+            $table->string('doc');
+            $table->string('cuit');
+
+            $table->string('condicioniva')->nullable();
+
             $table->boolean('enviarcomprobante')->default(false);
             $table->boolean('estado')->default(false);
 
             $table->string('condicionpago');
             $table->string('mail')->nullable();
             $table->string('telefono');
-            
+
+            $table->string('sexo');
+            $table->string('direccion');
+            $table->string('localidad');
+            $table->string('provincia');
+            $table->string('cp')->nullable();
+
             $table->text('foto')->nullable();
 
-            $table->timestamps();
 
-            
+            $table->timestamps();
         });
     }
 

@@ -43,6 +43,9 @@
                     <a @click="deleteCliente(articulo.id)">
                       <i class="fas fa-trash-alt red"></i>
                     </a>
+                    <a v-if="articulo.comprobante" @click="mira(articulo)" href="#">
+                      <i class="fas fa-file-invoice"></i>
+                    </a>
 
                     <router-link :to="{ path: '/inventarios/'+ articulo.id}" class="nav-link">
                       <i class="fas fa-warehouse"></i>
@@ -127,7 +130,7 @@
                 <div class="col-6 bordeado">
                   <p>
                     <strong>CUIT:</strong>
-                    {{cliente.doc}}
+                    {{cliente.cuit}}
                     <br>
                     <strong>Condicion frente al IVA:</strong>
                     {{this.condicion}}
@@ -141,7 +144,7 @@
                 <div class="col-6 bordeado">
                   <p>
                     <strong>Apellido y Nombre/Razon Social</strong>
-                    {{cliente.nombre}}
+                    {{cliente.razonsocial}}
                     <br>
                     <strong>Domicilio:</strong>
                     {{cliente.direccion}}
@@ -193,22 +196,20 @@
               </div>
 
               <div class="row">
-                <div class="col-12 bordeado">
+                <!-- <div class="col-12 bordeado">
                   <barcode :value="codigobarra" :options="options" :tag="tag"></barcode>
                   <p>{{codigobarra}}</p>
-                </div>
+                </div>-->
               </div>
 
               <div class="row">
                 <div class="col-1 bordeado">Pag. 1/1</div>
 
                 <div class="col-5 bordeado">
-                  <strong>CAE:</strong>
-                  {{cae}}
-                  <br>
-                  <strong>Fecha Vto CAE:</strong>
-                  {{vtocae}}
-                  <br>
+                  <button
+                    class="btn btn-success"
+                    @click.prevent="generar(form.numfactura)"
+                  >Generar Factura</button>
                 </div>
               </div>
             </div>
@@ -240,14 +241,17 @@ export default {
       cae: null,
       vtocae: null,
       codigobarra: "0",
+
       cliente: new Form({
         id: "",
-        nombre: "",
+        razonsocial: "",
+        cuit: "",
         doc: "",
         direccion: "",
         cp: "",
-        percibeiva: 0,
-        percibeiibb: 0,
+        estado: "",
+        localidad: "",
+        provincia: "",
         condicionpago: "",
         enviarcomprobante: 0,
         mail: "",
@@ -298,6 +302,40 @@ export default {
     }
   },
   methods: {
+    mira(articulo) {
+      this.form.errors.clear();
+      this.editMode = true;
+      this.form.reset();
+      this.traerFactura(articulo.id);
+      this.traerCliente(articulo.cliente_id);
+      // this.traerAfip(articulo.numfactura);
+      $("#usuario").modal("show");
+      this.form.fill(articulo);
+      this.traerafip(articulo.id);
+      var me = this;
+      axios
+        .get("/api/detalles/" + this.form.id)
+        .then(function(response) {
+          me.detalles = response.data.detalle;
+        })
+        .catch(function(error) {
+          // handle error
+          console.log(error);
+        })
+        .then(function() {
+          // always executed
+        });
+    },
+    traerafip(id) {
+      axios.get("api/afip/" + id).then(response => {
+        console.log(response);
+      });
+    },
+    generar(numfactura) {
+      axios.get("api/facturar/" + numfactura).then(response => {
+        console.log(response.data);
+      });
+    },
     deleteCliente(id) {
       swal({
         title: "Estas Seguro?",
@@ -354,16 +392,31 @@ export default {
       this.form.errors.clear();
       this.editMode = true;
       this.form.reset();
-
+      this.traerFactura(articulo.id);
       this.traerCliente(articulo.cliente_id);
-      this.traerAfip(articulo.numfactura);
+      // this.traerAfip(articulo.numfactura);
       $("#usuario").modal("show");
       this.form.fill(articulo);
       var me = this;
       axios
         .get("/api/detalles/" + this.form.id)
         .then(function(response) {
+          console.log(response.data.detalle);
           me.detalles = response.data.detalle;
+        })
+        .catch(function(error) {
+          // handle error
+          console.log(error);
+        })
+        .then(function() {
+          // always executed
+        });
+    },
+    traerFactura(id) {
+      axios
+        .get("/api/factura/" + id)
+        .then(function(response) {
+          console.log(response.data);
         })
         .catch(function(error) {
           // handle error

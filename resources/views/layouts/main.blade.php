@@ -87,15 +87,27 @@ scratch. This page gets rid of all links and provides the needed markup only.
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
 
-               <li class="nav-item">
-              <router-link to="/afip" class="nav-link">
-                <i class="fas fa-receipt"></i>
-                  <p>
-                    Factura Electronica
-                  </p>
-              </router-link>
-              
+              <li class="nav-item has-treeview">
+              <a href="#" class="nav-link">
+                <i class="fas fa-cash-register"></i>
+                <p>
+                  Ventas
+                  <i class="right fa fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <router-link to="/facturas" class="nav-link">
+                   <i class="fas fa-file-invoice-dollar"></i>
+                      <p>
+                        Facturas de Ventas
+                      </p>
+                  </router-link>
+                 
+                </li>
+              </ul>
             </li>
+            
 
             <li class="nav-item has-treeview">
               <a href="#" class="nav-link">
@@ -107,41 +119,31 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </a>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <router-link to="/remito" class="nav-link">
+                  <router-link to="/remitos" class="nav-link">
                     <i class="fas fa-receipt"></i>
                       <p>
-                        Alta Remito
+                        Facturas de Compra
                       </p>
                   </router-link>
-                   <router-link to="/remitos" class="nav-link">
+                   {{-- <router-link to="/remitos" class="nav-link">
                     <i class="fas fa-receipt"></i>
                       <p>
                        Remitos
                       </p>
-                  </router-link>
-                   <router-link to="/compras" class="nav-link">
+                  </router-link> --}}
+                   {{-- <router-link to="/compras" class="nav-link">
                     <i class="fas fa-receipt"></i>
                       <p>
                        Reporte Compras
                       </p>
-                  </router-link>
+                  </router-link> --}}
                 </li>
               </ul>
             </li>
 
-            <li class="nav-item">
-              <router-link to="/dashboard" class="nav-link">
-                <i class="nav-icon fas fa-tachometer-alt"></i>
-                  <p>
-                  Dashboard
-                 
-                </p>
-              </router-link>
-              
-            </li>
             <li class="nav-item has-treeview">
               <a href="#" class="nav-link">
-                <i class="fab fa-product-hunt"></i>
+                <i class="fas fa-boxes"></i>
                 <p>
                   Articulos
                   <i class="right fa fa-angle-left"></i>
@@ -154,38 +156,56 @@ scratch. This page gets rid of all links and provides the needed markup only.
                       <p>Articulos</p>
                     </router-link>
                 </li>
-                <li class="nav-item">
+                {{-- <li class="nav-item">
                   <router-link to="/inventarios" class="nav-link">
-                    <i class="fas fa-barcode"></i>
+                    <i class="fas fa-warehouse"></i>
                     <p>Inventario</p>
                   </router-link>
-                </li>
+                </li> --}}
 
                 <li class="nav-item">
                   <router-link to="/categorias" class="nav-link">
-                    <i class="fas fa-hand-pointer"></i>
+                    <i class="fas fa-tags"></i>
                     <p>Categorias</p>
                   </router-link>
                 </li>
 
                 <li class="nav-item">
                   <router-link to="/suppliers" class="nav-link">
-                    <i class="fas fa-hand-pointer"></i>
+                    <i class="fas fa-truck-loading"></i>
                     <p>Suppliers</p>
                   </router-link>
                 </li>
 
                 <li class="nav-item">
                   <router-link to="/marcas" class="nav-link">
-                    <i class="fas fa-hand-pointer"></i>
+                    <i class="fas fa-copyright"></i>
                     <p>Marcas</p>
                   </router-link>
                 </li>
                
               </ul>
             </li>
+             <li class="nav-item">
+              <router-link to="/clientes" class="nav-link">
+               <i class="fas fa-address-card"></i>
+                 <p>
+                Clientes
+                
+               </p>
+             </router-link>
+           </li>
 
-
+             <li class="nav-item">
+              <router-link to="/dashboard" class="nav-link">
+                <i class="nav-icon fas fa-tachometer-alt"></i>
+                  <p>
+                  Dashboard
+                 
+                </p>
+              </router-link>
+              
+            </li>
           <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
                 <i class="fas fa-cogs"></i>
@@ -209,7 +229,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </li>
             </ul>
           </li>
-          <li class="nav-item">
+
+          {{-- <li class="nav-item">
             <router-link to="/lista" class="nav-link">
              <i class="nav-icon fas fa-tachometer-alt"></i>
                <p>
@@ -217,7 +238,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               
              </p>
            </router-link>
-         </li>
+         </li> --}}
 
             <li class="nav-item">
                <router-link to="/profile" class="nav-link">
@@ -228,7 +249,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </p>
               </router-link>
             </li>
-            <li class="nav-item">
+            {{-- <li class="nav-item">
                <router-link to="/grafico" class="nav-link">
                 <i class="fas fa-file-invoice"></i>
                   <p>
@@ -236,7 +257,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                  
                 </p>
               </router-link>
-            </li>
+            </li> --}}
             @can('isAdmin')
             <li class="nav-item">
                <router-link to="/developer" class="nav-link">
@@ -248,15 +269,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </router-link>
             </li>
             @endcan
-            <li class="nav-item">
-              <router-link to="/clientes" class="nav-link">
-               <i class="nav-icon fas fa-cog"></i>
-                 <p>
-                Clientes
-                
-               </p>
-             </router-link>
-           </li>
+           
 
             <li class="nav-item">
               

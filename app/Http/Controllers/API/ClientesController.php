@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\API;
 
+use Afip;
 use Image;
 use App\Cliente;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreCliente;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateCliente;
-use Illuminate\Support\Facades\Auth;
 use function GuzzleHttp\json_decode;
+use Illuminate\Support\Facades\Auth;
 
 class ClientesController extends Controller
 {
@@ -52,7 +53,7 @@ class ClientesController extends Controller
 
         $data = $request->validated();
 
-        $data['nombre'] = ucwords($data['nombre']);
+        $data['razonsocial'] = ucwords($data['razonsocial']);
         $data['direccion'] = ucwords($data['direccion']);
         $data['foto'] = $foto;
 
@@ -104,7 +105,7 @@ class ClientesController extends Controller
 
 
         $data = $request->validated();
-        $data['nombre'] = ucwords($data['nombre']);
+        $data['razonsocial'] = ucwords($data['razonsocial']);
         $data['direccion'] = ucwords($data['direccion']);
 
         $data['foto'] = $foto;
@@ -155,7 +156,7 @@ class ClientesController extends Controller
 
     public function buscar(Request $request)
     {
-        $clientes = Cliente::where('nombre', 'LIKE', '%' . $request->buscar . '%')->get();
+        $clientes = Cliente::where('razonsocial', 'LIKE', '%' . $request->buscar . '%')->get();
         $user = 1;
         return response()->json([
             'user' => $user,
@@ -166,10 +167,30 @@ class ClientesController extends Controller
     public function show($id)
     {
 
+
         return $cliente = Cliente::find($id);
 
         return response()->json([
             'cliente' => $cliente
+
+        ]);
+    }
+
+    public function traerCliente($id)
+    {
+
+        $afip = new Afip(array('CUIT' => 23288066469));
+
+        $id = $id * 1;
+
+        $clientes = $afip->RegisterScopeTen->GetTaxpayerDetails($id);
+        // $cliente2 = $afip->RegisterScopeFour->GetTaxpayerDetails($id);
+        //$cliente3 = $afip->RegisterScopeFive->GetTaxpayerDetails($id);
+
+        return response()->json([
+            // 'cliente1' => $cliente1,
+            // 'cliente2' => $cliente2
+            'clientes' => $clientes
 
         ]);
     }

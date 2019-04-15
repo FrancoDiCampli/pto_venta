@@ -42,7 +42,10 @@
                   </td>
                   <td>{{articulo.articulo}}</td>
                   <td>{{articulo.precio}}</td>
-                  <td>{{articulo.stock.total}}</td>
+                  <td> <div v-for="stock in articulo.stock" :key="stock.id">
+                      <div v-if="stock.total != undefined">{{stock.total}}</div>
+                      <div v-else>0</div>
+                    </div></td>
 
                   <td>
                     <img :src="articulo.foto" style="width:120px;">
@@ -150,7 +153,7 @@
                 <div class="form-group col-4">
                   <label>Utilidades</label>
                   <input
-                    v-model="utilidades"
+                    v-model="form.utilidades"
                     type="text"
                     name="utilidades"
                     placeholder="utilidades"
@@ -274,6 +277,8 @@ export default {
         utilidades: "",
         precio: "",
         foto: "",
+        estado: false,
+        alicuota: "",
         marca_id: 0,
         categoria_id: 0
       }),
@@ -388,7 +393,8 @@ export default {
         .then(function(response) {
           (me.articulos = response.data.articulos),
             (me.marcas = response.data.marcas),
-            (me.categorias = response.data.categorias);
+            (me.categorias = response.data.categorias),
+            (console.log(me.articulos));
         })
         .catch(function(error) {
           // handle error

@@ -19,7 +19,7 @@ class RemitosController extends Controller
 
     public function store()
     {
-
+        return request();
         $detalles = request()->detalle;
 
         $detalle = array();
@@ -29,7 +29,7 @@ class RemitosController extends Controller
         $remito = new Remito;
 
         $remito->fill([
-            'numremito' => request()->ptoventa,
+            'numremito' => request()->numRemito,
             'fecha' => now(),
             'total' => request()->total,
             'recargo' =>  request()->recargo,

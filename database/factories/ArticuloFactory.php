@@ -14,6 +14,8 @@ $factory->define(App\Articulo::class, function (Faker $faker) {
         'utilidades' => 0.20,
         'precio' => $faker->randomFloat($nbMaxDecimals = null, $min = 1, $max = 7) * 0.20,
         'marca_id' => $faker->boolean($chanceOfGettingTrue = 50),
+        'alicuota' => 0.21,
+        'estado' => true,
         'foto' => $foto,
         'categoria_id' => Categoria::all()->random()->id,
         'marca_id' => Marca::all()->random()->id,

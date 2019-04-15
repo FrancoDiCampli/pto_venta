@@ -38,7 +38,7 @@ let routes = [
     { path: "/developer", component: require("./components/Dev.vue") },
     { path: "/users", component: require("./components/Users.vue") },
     { path: "/profile", component: require("./components/Profile.vue") },
-    { path: "/clientes", component: require("./components/Clientes.vue") },
+    { path: "/clientes", component: require("./components/Cliente.vue") },
     { path: "/categorias", component: require("./components/Categorias.vue") },
     { path: "/articulos", component: require("./components/Articulos.vue") },
     {
@@ -50,11 +50,11 @@ let routes = [
     { path: "/marcas", component: require("./components/Marcas.vue") },
     { path: "/factura", component: require("./components/Factura.vue") },
     { path: "/remito", component: require("./components/Remito.vue") },
-    { path: "/remitos", component: require("./components/Remito.vue") },
-    { path: "/compras", component: require("./components/Compras.vue") },
-    { path: "/afip", component: require("./components/Afip.vue") },
-    { path: "/lista", component: require("./components/Facturas.vue") },
-    { path: "/grafico", component: require("./components/graph/Graph.vue") }
+    { path: "/remitos", component: require("./components/Remitos.vue") },
+    // { path: "/compras", component: require("./components/Compras.vue") }
+    // { path: "/afip", component: require("./components/Afip.vue") },
+    { path: "/facturas", component: require("./components/Facturas.vue") }
+    // { path: "/grafico", component: require("./components/graph/Graph.vue") }
 ];
 
 const router = new VueRouter({
@@ -79,7 +79,7 @@ const toast = swal.mixin({
 window.toast = toast;
 
 Vue.component("pagination", require("laravel-vue-pagination"));
-Vue.component("grafico", require("./components/graph/Graph.vue"));
+// Vue.component("grafico", require("./components/graph/Graph.vue"));
 
 const app = new Vue({
     el: "#app",

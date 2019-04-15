@@ -16,6 +16,8 @@ class Articulo extends Model
         'costo',
         'utilidades',
         'precio',
+        'alicuota',
+        'estado',
         'foto',
         'marca_id',
         'categoria_id',

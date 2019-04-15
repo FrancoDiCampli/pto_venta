@@ -17,20 +17,25 @@ class CreateFacturasTable extends Migration
             $table->increments('id');
             $table->integer('ptoventa');
             $table->integer('numfactura');
-            $table->integer('cuit');
+            $table->string('cuit');
             $table->date('fecha');
-            $table->decimal('recargo',8,2);
+            $table->decimal('recargo');
 
-            $table->decimal('total',8,2);
-            
-            
-             $table->unsignedInteger('cliente_id');
-             $table->unsignedInteger('user_id');
-            
+            $table->decimal('total');
+
+            $table->string('numafip')->nullable();
+            $table->string('cae')->nullable();
+            $table->string('fechavto')->nullable();
+            $table->string('codbarra')->nullable();
+
+            $table->unsignedInteger('cliente_id');
+            $table->unsignedInteger('user_id');
+
             $table->timestamps();
 
+
             $table->foreign('user_id')->references('id')->on('users');
-           
+
             $table->foreign('cliente_id')->references('id')->on('clientes');
         });
     }

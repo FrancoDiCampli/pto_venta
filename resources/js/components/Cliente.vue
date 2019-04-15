@@ -28,7 +28,7 @@
 
                 <tr v-for="user in users.data" :key="user.id">
                   <td>{{user.id}}</td>
-                  <td>{{user.nombre}}</td>
+                  <td>{{user.razonsocial}}</td>
                   <td>{{user.mail}}</td>
                   <td>
                     <img :src="user.foto" style="width:120px;">
@@ -76,32 +76,71 @@
           <form @submit.prevent="editMode ? updateUser() : createUser()">
             <div class="modal-body">
               <div class="row">
-                <div class="form-group col-7">
+                <div class="form-group col-6">
                   <label>Nombre</label>
                   <input
-                    v-model="form.nombre"
+                    v-model="form.razonsocial"
                     type="text"
-                    name="nombre"
-                    placeholder="Nombre"
+                    name="razonsocial"
+                    placeholder="Razon Social"
                     class="form-control cap"
-                    :class="{ 'is-invalid': form.errors.has('nombre') }"
+                    :class="{ 'is-invalid': form.errors.has('razonsocial') }"
                   >
-                  <has-error :form="form" field="nombre"></has-error>
+                  <has-error :form="form" field="razonsocial"></has-error>
                 </div>
 
-                <div class="form-group col-5">
+                <div class="form-group col-6">
+                  <label>Tipo Persona</label>
+                  <select v-model="form.sexo" class="form-control">
+                    <option value="Masculino">Masculino</option>
+                    <option value="Femenino">Femenino</option>\
+                    <option value="Sociedad">Sociedad</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="form-group col-10">
                   <label>DNI</label>
                   <input
                     v-model="form.doc"
                     type="text"
                     name="doc"
                     placeholder="DNI"
-                    v-mask="'##.###.###'"
-                    @keyup.enter="validarInputs"
                     class="form-control"
                     :class="{ 'is-invalid': form.errors.has('doc') }"
                   >
                   <has-error :form="form" field="doc"></has-error>
+                </div>
+                <div class="form-group col-2">
+                  <label></label>
+                  <button class="form-control" @click.prevent="completar">
+                    <i class="fas fa-search"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="row">
+                <div class="form-group col-6">
+                  <label>CUIT</label>
+                  <input
+                    v-model="form.cuit"
+                    type="text"
+                    name="cuit"
+                    placeholder="CUIT"
+                    class="form-control"
+                    :class="{ 'is-invalid': form.errors.has('cuit') }"
+                  >
+                  <has-error :form="form" field="cuit"></has-error>
+                </div>
+
+                <div class="form-group col-6">
+                  <label>Condicion IVA</label>
+                  <select name="condicioniva" class="form-control">
+                    <option
+                      v-for="condicion in condiciones"
+                      :key="condicion.id"
+                    >{{condicion.condicion}}</option>
+                  </select>
                 </div>
               </div>
 
@@ -131,6 +170,21 @@
                   <has-error :form="form" field="cp"></has-error>
                 </div>
               </div>
+              <div class="row">
+                <div class="form-group col-6">
+                  <label>Localidad</label>
+                  <select v-model="form.localidad" class="form-control" name="localidad">
+                    <option value="Villa Angela">Villa Angela</option>
+                  </select>
+                </div>
+
+                <div class="form-group col-6">
+                  <label>Provincia</label>
+                  <select v-model="form.provincia" class="form-control" name="provincia">
+                    <option value="Chaco">Chaco</option>
+                  </select>
+                </div>
+              </div>
 
               <div class="row">
                 <div class="form-group col-7">
@@ -158,34 +212,6 @@
                   >
                   <has-error :form="form" field="telefono"></has-error>
                 </div>
-              </div>
-
-              <div class="form-check">
-                <input
-                  type="checkbox"
-                  v-model="form.percibeiva"
-                  name="percibeiva"
-                  class="form-check-input"
-                  id="percibeiva"
-                  true-value="1"
-                  false-value="0"
-                  :class="{ 'is-invalid': form.errors.has('percibeiva') }"
-                >
-                <label class="form-check-label" for="percibeiva">IVA</label>
-              </div>
-
-              <div class="form-check">
-                <input
-                  type="checkbox"
-                  v-model="form.percibeiibb"
-                  name="percibeiibb"
-                  class="form-check-input"
-                  id="percibeiibb"
-                  true-value="1"
-                  false-value="0"
-                  :class="{ 'is-invalid': form.errors.has('percibeiibb') }"
-                >
-                <label class="form-check-label" for="percibeiibb">Ing.Brutos</label>
               </div>
 
               <div class="form-check">
@@ -263,26 +289,60 @@ export default {
       users: {},
       image: "",
       busqueda: {},
-
+      doc: "",
+      sex: "",
+      clientes: {},
       form: new Form({
         id: "",
-        nombre: "",
+        razonsocial: "",
         doc: "",
-        direccion: "",
-        cp: "",
-        percibeiva: 0,
-        percibeiibb: 0,
+        cuit: "",
+        condicioniva: "",
         condicionpago: "",
-        enviarcomprobante: 0,
+        enviarcomprobante: false,
         mail: "",
         telefono: "",
+        sexo: "",
         estado: 0,
-        foto: ""
-      })
+        direccion: "",
+        localidad: "",
+        provincia: "",
+        cp: "",
+        foto: "",
+        sexo: ""
+      }),
+      condiciones: [
+        { id: 1, condicion: "IVA Responsable Inscripto" },
+        { id: 2, condicion: "IVA Responsable no Inscripto" },
+        { id: 3, condicion: "Consumidor Final" },
+        { id: 4, condicion: "IVA no Responsable" },
+        { id: 5, condicion: "IVA Sujeto Exento" },
+        { id: 6, condicion: "Responsable Monotributo" },
+        { id: 7, condicion: "Monotributista Social" }
+      ],
+      localidades: [{ id: 1, localidad: "Villa Angela" }]
     };
   },
   watch: {},
   methods: {
+    completar() {
+      var i = this.localidades.length;
+
+      axios.get("api/cliente/" + this.form.cuit).then(response => {
+        this.clientes = response.data.clientes;
+
+        if (this.clientes.razonSocial) {
+          this.form.razonsocial = this.clientes.razonSocial;
+          this.form.direccion = this.clientes.domicilio[0].direccion;
+          this.form.cp = this.clientes.domicilio[0].codPostal;
+        } else {
+          this.form.razonsocial = this.clientes.apellido + this.clientes.nombre;
+          this.form.direccion = this.clientes.domicilio[0].direccion;
+          this.form.cp = this.clientes.domicilio[0].codPostal;
+          this.form.localidad = this.clientes.domicilio[0].localidad;
+        }
+      });
+    },
     deleteCliente(id) {
       swal({
         title: "Estas Seguro?",
@@ -361,6 +421,7 @@ export default {
     },
     loadUsers() {
       this.form.reset();
+      this.getResults();
       axios.get("api/clientes").then(({ data }) => (this.users = data));
     },
 

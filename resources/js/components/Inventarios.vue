@@ -36,7 +36,7 @@
               <a class="btn btn-primary" @click="editArticle(inventario)">
                 <i class="fas fa-edit"></i>Editar
               </a>
-              
+
               <a class="btn btn-success" href>
                 <i class="fas fa-edit"></i>Movimientos
               </a>
@@ -179,24 +179,6 @@
                                   :key="proveedor.id"
                                   :value="proveedor.id"
                                 >{{ proveedor.proveedor }}</option>
-                              </select>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div class="row">
-                          <div class="col-md-12">
-                            <div class="form-group bmd-form-group">
-                              <label>Movimiento</label>
-                              <select
-                                class="form-control"
-                                name="tipomovimiento"
-                                v-model="tipomovimiento"
-                              >
-                                <option value="1">Alta</option>
-                                <option value="2">Venta</option>
-                                <option value="3">Devolucion</option>
-                                <option value="4">Baja x Vencimiento</option>
                               </select>
                             </div>
                           </div>

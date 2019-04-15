@@ -24,18 +24,20 @@ class StoreCliente extends FormRequest
     public function rules()
     {
         return [
-            'nombre'=>'required|unique:clientes|min:3|max:190',
-            'doc'=>'required|unique:clientes|min:7',
-            'direccion'=>'required|min:3|max:190',
-            'cp'=>'required',
-            'mail'=>'max:190',
-            'condicionpago'=>'required|max:190',
-            'telefono'=>'required|min:6|max:16',
-            'codigopostal'=>'min:1|max:4',
-            'percibeiva'=>'min:1',
-            'percibeiibb'=>'min:1',
-            'enviarcomprobante'=>'min:1',
-            'estado'=>'min:1'            
+            'razonsocial' => 'required|unique:clientes|min:3|max:190',
+            'doc' => 'required|unique:clientes|min:7',
+            'cuit' => 'sometimes|required|min:11',
+            'direccion' => 'required|min:3|max:190',
+            'cp' => 'required',
+            'localidad' => 'required',
+            'provincia' => 'required',
+            'mail' => 'max:190',
+            'condicionpago' => 'required|max:190',
+            'telefono' => 'required|min:6|max:16',
+            'codigopostal' => 'min:1|max:4',
+            'sexo' => 'sometimes',
+            'enviarcomprobante' => 'min:1',
+            'estado' => 'min:1'
         ];
     }
 }
